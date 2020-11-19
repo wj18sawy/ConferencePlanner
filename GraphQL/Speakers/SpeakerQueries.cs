@@ -1,17 +1,18 @@
-using System.Linq;
-using HotChocolate;
-using ConferencePlanner.GraphQL.Data;
-using ConferencePlanner.GraphQL.Extensions;
-using System.Threading.Tasks;
 using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using ConferencePlanner.GraphQL.DataLoader;
 using System.Threading;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using ConferencePlanner.GraphQL.Data;
+using ConferencePlanner.GraphQL.DataLoader;
+using HotChocolate;
+using HotChocolate.Types;
 using HotChocolate.Types.Relay;
+using ConferencePlanner.GraphQL.Extensions;
 
-namespace ConferencePlanner.GraphQL
+namespace ConferencePlanner.GraphQL.Speakers
 {
-    public class Query
+    [ExtendObjectType(Name = "Query")]
+    public class SpeakerQueries
     {
         [UseApplicationDbContext]
         public Task<List<Speaker>> GetSpeakers([ScopedService] ApplicationDbContext context) =>
