@@ -8,6 +8,7 @@ using ConferencePlanner.GraphQL.DataLoader;
 using HotChocolate;
 using HotChocolate.Resolvers;
 using HotChocolate.Types;
+using ConferencePlanner.GraphQL.Extensions;
 
 namespace ConferencePlanner.GraphQL.Types
 {
@@ -20,12 +21,18 @@ namespace ConferencePlanner.GraphQL.Types
                 .IdField(t => t.Id)
                 .NodeResolver((ctx, id) =>
                     ctx.DataLoader<TrackByIdDataLoader>().LoadAsync(id, ctx.RequestAborted));
-                    
+
             descriptor
                 .Field(t => t.Sessions)
                 .ResolveWith<TrackResolvers>(t => t.GetSessionsAsync(default!, default!, default!, default))
                 .UsePaging<NonNullType<SessionType>>()
                 .Name("sessions");
+
+            // Here's a way to add custom middleware: see ObjectFieldDescriptorExtensions 
+
+            //descriptor
+            //    .Field(t => t.Name)
+            //    .UseUpperCase();
         }
 
         private class TrackResolvers
