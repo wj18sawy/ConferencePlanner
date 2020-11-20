@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 using ConferencePlanner.GraphQL;
 using ConferencePlanner.GraphQL.Data;
 using ConferencePlanner.GraphQL.DataLoader;
+using ConferencePlanner.GraphQL.Sessions;
+using ConferencePlanner.GraphQL.Speakers;
+using ConferencePlanner.GraphQL.Tracks;
 using ConferencePlanner.GraphQL.Types;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -25,12 +28,22 @@ namespace ConferencePlanner.GraphQL
                 options => options.UseSqlite("Data Source=conferences.db"));
 
             services
-             .AddGraphQLServer()
-             .AddQueryType<Query>()
-             .AddMutationType<Mutation>()
-             .AddType<SpeakerType>()
-             .AddDataLoader<SpeakerByIdDataLoader>()
-             .AddDataLoader<SessionByIdDataLoader>();
+                .AddGraphQLServer()
+                .AddQueryType(d => d.Name("Query"))
+                    .AddTypeExtension<SessionQueries>()
+                    .AddTypeExtension<SpeakerQueries>()
+                    .AddTypeExtension<TrackQueries>()
+                .AddMutationType(d => d.Name("Mutation"))
+                    .AddTypeExtension<SessionMutations>()
+                    .AddTypeExtension<SpeakerMutations>()
+                    .AddTypeExtension<TrackMutations>()
+                .AddType<AttendeeType>()
+                .AddType<SessionType>()
+                .AddType<SpeakerType>()
+                .AddType<TrackType>()
+                .EnableRelaySupport()
+                .AddDataLoader<SpeakerByIdDataLoader>()
+                .AddDataLoader<SessionByIdDataLoader>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
