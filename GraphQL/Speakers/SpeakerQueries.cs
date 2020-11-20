@@ -8,6 +8,7 @@ using HotChocolate;
 using HotChocolate.Types;
 using HotChocolate.Types.Relay;
 using ConferencePlanner.GraphQL.Extensions;
+using System.Linq;
 
 namespace ConferencePlanner.GraphQL.Speakers
 {
@@ -15,9 +16,10 @@ namespace ConferencePlanner.GraphQL.Speakers
     public class SpeakerQueries
     {
         [UseApplicationDbContext]
-        public Task<List<Speaker>> GetSpeakersAsync(
+        [UsePaging]
+        public IQueryable<Speaker> GetSpeakers(
             [ScopedService] ApplicationDbContext context) =>
-            context.Speakers.ToListAsync();
+            context.Speakers.OrderBy(t => t.Name);
 
         public Task<Speaker> GetSpeakerByIdAsync(
             [ID(nameof(Speaker))] int id,
