@@ -29,10 +29,9 @@ namespace ConferencePlanner.GraphQL.Types
                 .Name("sessions");
 
             // Here's a way to add custom middleware: see ObjectFieldDescriptorExtensions 
-
-            //descriptor
-            //    .Field(t => t.Name)
-            //    .UseUpperCase();
+            descriptor
+                .Field(t => t.Name)
+                .UseUpperCase();
         }
 
         private class TrackResolvers
