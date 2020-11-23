@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ConferencePlanner.GraphQL;
+using ConferencePlanner.GraphQL.Attendees;
 using ConferencePlanner.GraphQL.Data;
 using ConferencePlanner.GraphQL.DataLoader;
 using ConferencePlanner.GraphQL.Sessions;
@@ -30,13 +31,18 @@ namespace ConferencePlanner.GraphQL
             services
                 .AddGraphQLServer()
                 .AddQueryType(d => d.Name("Query"))
+                    .AddTypeExtension<AttendeeQueries>()
                     .AddTypeExtension<SessionQueries>()
                     .AddTypeExtension<SpeakerQueries>()
                     .AddTypeExtension<TrackQueries>()
                 .AddMutationType(d => d.Name("Mutation"))
+                    .AddTypeExtension<AttendeeMutations>()
                     .AddTypeExtension<SessionMutations>()
                     .AddTypeExtension<SpeakerMutations>()
                     .AddTypeExtension<TrackMutations>()
+                .AddSubscriptionType(d => d.Name("Subscription"))
+                    .AddTypeExtension<AttendeeSubscriptions>()
+                    .AddTypeExtension<SessionSubscriptions>()
                 .AddType<AttendeeType>()
                 .AddType<SessionType>()
                 .AddType<SpeakerType>()
@@ -44,6 +50,7 @@ namespace ConferencePlanner.GraphQL
                 .EnableRelaySupport()
                 .AddFiltering()
                 .AddSorting()
+                .AddInMemorySubscriptions()
                 .AddDataLoader<SpeakerByIdDataLoader>()
                 .AddDataLoader<SessionByIdDataLoader>();
         }
@@ -56,6 +63,7 @@ namespace ConferencePlanner.GraphQL
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseWebSockets();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
